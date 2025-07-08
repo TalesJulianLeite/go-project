@@ -46,7 +46,6 @@ jobs:
         run: |
           echo "Installing SonarScanner..."
           sudo apt-get update
-          -sc
 
       - name: Run SonarScanner CLI
         run: |
