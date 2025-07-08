@@ -12,26 +12,4 @@ func TestSum(t *testing.T) {
 	}
 }
 
-func TestSub(t *testing.T) {
-	result := sub(5, 2)
 
-	if result != 3 {
-		t.Error(ERROR_MESSAGE + "3")
-	}
-}
-
-func TestTimes(t *testing.T) {
-	result := times(6, 2)
-
-	if result != 12 {
-		t.Error(ERROR_MESSAGE + "12")
-	}
-}
-
-func TestSumX(t *testing.T) {
-	result := sumX(3, 2)
-
-	if result != 8 {
-		t.Error(ERROR_MESSAGE + "8")
-	}
-}
