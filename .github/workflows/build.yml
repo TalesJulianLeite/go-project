@@ -20,44 +20,19 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
-      - name: Install SonarScanner
-        run: |
-          echo "Installing SonarScanner..."
-          sudo apt-get update
-          sudo apt-get install -y unzip openjdk-11-jre
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-          unzip sonar-scanner-cli-5.0.1.3006-linux.zip
-          sudo mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
-          echo "SONAR_SCANNER_HOME=/opt/sonar-scanner" >> $GITHUB_ENV
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build Project
         run: |
           echo "Compiling..."
           go build -v ./...
-
-  check-applications:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install SonarScanner
-        run: |
-          echo "Installing SonarScanner..."
-          sudo apt-get update
-          sudo apt-get install -y unzip openjdk-11-jre
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-          unzip sonar-scanner-cli-5.0.1.3006-linux.zip
-          sudo mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
-          echo "SONAR_SCANNER_HOME=/opt/sonar-scanner" >> $GITHUB_ENV
-          echo "/opt/sonar-scanner/bin" >> $GITHUB_PATH
-
-      - name: Run SonarScanner CLI
-        run: |
-          sonar-scanner \
-          -Dsonar.projectKey=go-project \
-          -Dsonar.organization=tales-personal \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.sourceEncoding=UTF-8 \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-
