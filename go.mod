@@ -1,1 +1,3 @@
-go mod init go-project
+module go-project
+
+go 1.23
